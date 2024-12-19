@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Files</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #f3f4f6;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+        main {
+            flex-grow: 1;
+        }
+        footer {
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+        .file-card {
+            transition: transform 0.3s;
+        }
+        .file-card:hover {
+            transform: scale(1.05);
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const files = [
+                { name: 'C# 01: Carpool', link: 'info/file1.html', descFile: 'descs/file1.desc' },
+            ];
+
+            const container = document.getElementById('file-cards');
+
+            files.forEach(file => {
+                const card = document.createElement('div');
+                card.className = 'file-card bg-white shadow-md rounded-lg overflow-hidden';
+
+                const link = document.createElement('a');
+                link.href = file.link;
+
+                const content = document.createElement('div');
+                content.className = 'p-4';
+
+                const title = document.createElement('h2');
+                title.className = 'text-lg font-semibold text-gray-800';
+                title.textContent = file.name;
+
+                const description = document.createElement('p');
+                description.className = 'text-sm text-gray-600';
+                description.textContent = 'Loading...';
+
+                // Load description from file
+                fetch(file.descFile)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Could not load description for ${file.name}`);
+                        }
+                        return response.text();
+                    })
+                    .then(text => {
+                        description.textContent = text;
+                    })
+                    .catch(error => {
+                        description.textContent = 'Description not available.';
+                        console.error(error);
+                    });
+
+                content.appendChild(title);
+                content.appendChild(description);
+                link.appendChild(content);
+                card.appendChild(link);
+                container.appendChild(card);
+            });
+        });
+    </script>
+</head>
+<body class="font-sans">
+<header class="bg-blue-600 text-white p-4 text-center">
+    <h1 class="text-2xl font-bold">My Files</h1>
+    <p class="text-sm">Click on a file to view details and download</p>
+</header>
+
+<main class="p-6">
+    <div id="file-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- File cards will be dynamically inserted here -->
+    </div>
+</main>
+
+<footer class="bg-blue-600 text-white text-center p-4">
+    <p>&copy; 2024 Julian Einzinger | My Files</p>
+</footer>
+</body>
+</html>
